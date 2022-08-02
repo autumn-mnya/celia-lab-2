@@ -223,7 +223,7 @@ public class EditorApp extends JFrame implements ActionListener {
 
 		// setups
 		if (EDITOR_MODE == 2) {
-			NUM_LAYER = 6;
+			NUM_LAYER = 7;
 		} else {
 			NUM_LAYER = 5;
 		}
