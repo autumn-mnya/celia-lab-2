@@ -87,6 +87,10 @@ public class GameInfo {
 	public MOD_TYPE type;
 	
 	public static final String[] sfxNames = loadSfxNames();
+	public static final String[] BackgroundTypeNames = loadBackgroundTypeNames();
+	public static final String[] NpcSizeNames = loadNpcSizeNames();
+	public static final String[] NpcSurfaceNames = loadNpcSurfaceNames();
+	public static final String[] MapBossesNames = loadMapBossesNames();
 
 	public File getBase() {
 		return base;
@@ -242,6 +246,78 @@ public class GameInfo {
 			results = lineHolder.toArray(new String[lineHolder.size()]);
 		} catch (FileNotFoundException err) {
 			StrTools.msgBox(Messages.getString("GameInfo.14")); //$NON-NLS-1$
+		}		
+		return results;
+	}
+
+	private static String[] loadBackgroundTypeNames() {
+		File backgroundFile = new File("backgroundTypes.txt"); //$NON-NLS-1$
+		String[] results = new String[0];
+		ArrayList<String> lineHolder = new ArrayList<>();
+		try {
+			Scanner sc = new Scanner(backgroundFile);
+			//String currentLine;
+			while (sc.hasNextLine()) {
+				lineHolder.add(sc.nextLine());				
+			}
+			sc.close();
+			results = lineHolder.toArray(new String[lineHolder.size()]);
+		} catch (FileNotFoundException err) {
+			StrTools.msgBox(Messages.getString("GameInfo.Celia.1")); //$NON-NLS-1$
+		}		
+		return results;
+	}
+
+	private static String[] loadNpcSizeNames() {
+		File sizeFile = new File("npcSize.txt"); //$NON-NLS-1$
+		String[] results = new String[0];
+		ArrayList<String> lineHolder = new ArrayList<>();
+		try {
+			Scanner sc = new Scanner(sizeFile);
+			//String currentLine;
+			while (sc.hasNextLine()) {
+				lineHolder.add(sc.nextLine());				
+			}
+			sc.close();
+			results = lineHolder.toArray(new String[lineHolder.size()]);
+		} catch (FileNotFoundException err) {
+			StrTools.msgBox(Messages.getString("GameInfo.Celia.2")); //$NON-NLS-1$
+		}		
+		return results;
+	}
+
+	private static String[] loadNpcSurfaceNames() {
+		File surfaceFile = new File("npcSurfaceList.txt"); //$NON-NLS-1$
+		String[] results = new String[0];
+		ArrayList<String> lineHolder = new ArrayList<>();
+		try {
+			Scanner sc = new Scanner(surfaceFile);
+			//String currentLine;
+			while (sc.hasNextLine()) {
+				lineHolder.add(sc.nextLine());				
+			}
+			sc.close();
+			results = lineHolder.toArray(new String[lineHolder.size()]);
+		} catch (FileNotFoundException err) {
+			StrTools.msgBox(Messages.getString("GameInfo.Celia.3")); //$NON-NLS-1$
+		}		
+		return results;
+	}
+
+	private static String[] loadMapBossesNames() {
+		File bossFile = new File("mapBosses.txt"); //$NON-NLS-1$
+		String[] results = new String[0];
+		ArrayList<String> lineHolder = new ArrayList<>();
+		try {
+			Scanner sc = new Scanner(bossFile);
+			//String currentLine;
+			while (sc.hasNextLine()) {
+				lineHolder.add(sc.nextLine());				
+			}
+			sc.close();
+			results = lineHolder.toArray(new String[lineHolder.size()]);
+		} catch (FileNotFoundException err) {
+			StrTools.msgBox(Messages.getString("GameInfo.Celia.4")); //$NON-NLS-1$
 		}		
 		return results;
 	}
