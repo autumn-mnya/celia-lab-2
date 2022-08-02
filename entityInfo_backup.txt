@@ -36,7 +36,7 @@
 #29	Cthu	 	Cthulhu 	0:384:32:432	Cthulhu 	CE:Characters Character:Human Tileset:Regu ;
 #30	Hermt	Gunsm	Gunsmith 	0:64:32:96	Hermit Gunsmith 	CE:Characters Character:Human Tileset:Guest ;
 #31	Enemy	BatBH	Bat(hang_black) 	0:158:32:190	Enemy - Bat (black, hanging) 	CE:Grasstown Tileset:Weed Enemy:Air ;
-#32	Heart	life	Heart Container	0:480:32:512	Heart Container 	General:Prop CE:General Tileset:Sym ;
+#32	Capsl	life	Life Capsule	64:192:96:224	Life Capsule 	General:Prop CE:General Tileset:Sym ;
 #33	Proj	Blrg2	Shot(Bllg_bounce) 	480:160:512:192	Projectile - Balrog (energy bounce) 	CE:Balrog Tileset:Bllg Projectile:All ;
 #34	Bed	 	Bed 	384:96:448:128	Bed 	General:Prop CE:General Tileset:Sym ;
 #35	Enemy	Manan	Mannan 	192:128:240:192	Enemy - Mannan 	CE:Grasstown Tileset:Weed Enemy:Ground ;
@@ -368,12 +368,12 @@
 #361	Col	Unc	Collectable Uncollected	0:0:0:0	null	;
 #362	un	used	unused(?)	0:0:0:0	null	;
 #363	Alice	Death	Alice Death Animation	0:0:0:0	null	;
-#364	Col	Col	Collectable Collected	0:0:0:0	null	;
+#364	Col	Col Collectable Collected	0:0:0:0	null	;
 #365	Money	Token	Token Currency	0:0:0:0	null	;
 #366	EXP	CS	Cave Story EXP	0:0:0:0	null	;
 #367	Alice	Drown	Alice Drown Animation	0:0:0:0	null	;
 #368	Extra	Jump	Jump Arrow	0:0:0:0	null	;
-#369	Tempo	Block	Tempo Block	0:0:0:0	null	;
+#369	Tempo	Block	Tile changes overtime.	0:0:0:0	null	;
 #370	block1	-	block? 1	0:0:0:0	null	;
 #371	block2	-	block? 2	0:0:0:0	null	;
 #372	un	used	unused(?)	0:0:0:0	null	;
@@ -381,7 +381,7 @@
 #374	Follower	NPC	Follower npc, Party member.	0:0:0:0	null	;
 #375	un	used	unused(?)	0:0:0:0	null	;
 #376	block3	-	block? 3	0:0:0:0	null	;
-#377	Jump	Block	Jump Block	0:0:0:0	null	;
+#377	Jump	Block	Tile changes per jump.	0:0:0:0	null	;
 #378	no	name	unnamed	0:0:0:0	null	;
 #379	no	name	unnamed	0:0:0:0	null	;
 #380	no	name	unnamed	0:0:0:0	null	;
