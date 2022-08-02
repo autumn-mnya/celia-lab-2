@@ -121,11 +121,11 @@ public class EditorApp extends JFrame implements ActionListener {
 
 	// drawing related maybe?
 	public static int NUM_LAYER;
-	public static final int PHYSICAL_LAYER = 5;
-	public static final int GRADIENT_LAYER = 4;
+	public static final int PHYSICAL_LAYER = 6;
+	public static final int GRADIENT_LAYER = 5;
 	private final static String[] LAYER_NAMES = { Messages.getString("EditorApp.25"), //$NON-NLS-1$
 			Messages.getString("EditorApp.26"), Messages.getString("EditorApp.27"), Messages.getString("EditorApp.28"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"Gradient", Messages.getString("EditorApp.29"), }; //$NON-NLS-1$ //$NON-NLS-2$
+			Messages.getString("EditorApp.CeliaMapping.1"), "Gradient", Messages.getString("EditorApp.29"), }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private boolean[] visibleLayers; // array of which layers should be shown
 	private int activeLayer; // current layer to draw to
@@ -225,7 +225,7 @@ public class EditorApp extends JFrame implements ActionListener {
 		if (EDITOR_MODE == 2) {
 			NUM_LAYER = 6;
 		} else {
-			NUM_LAYER = 4;
+			NUM_LAYER = 5;
 		}
 		getPrefs();
 		visibleLayers = new boolean[NUM_LAYER];
