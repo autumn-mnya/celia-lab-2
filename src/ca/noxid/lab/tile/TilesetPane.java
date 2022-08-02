@@ -169,6 +169,8 @@ public class TilesetPane extends JPanel {
 			//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$
 	};
 
+	// Kaitlyn - This is where BL draws the background behind the tiles.
+
 	private static final long serialVersionUID = -4160450343759615331L;
 	public static Color bgCol = Color.DARK_GRAY;
 	ResourceManager iMan;

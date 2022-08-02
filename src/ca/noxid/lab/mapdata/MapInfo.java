@@ -272,7 +272,7 @@ public class MapInfo implements Changeable {
 		} catch (IOException e) {
 			StrTools.msgBox(Messages.getString("MapInfo.10") + directory + "/Stage/" + d.getFile() //$NON-NLS-1$ //$NON-NLS-2$
 					+ ".pxm"); //$NON-NLS-1$
-			mapX = 21;
+			mapX = 28;
 			mapY = 16;
 			if (EditorApp.EDITOR_MODE == 0) {
 				pxmVersion = 0x10;
@@ -411,14 +411,14 @@ public class MapInfo implements Changeable {
 			break;
 		case 1: // cs+ / ks
 			pxmTag[3] = 0x20;
-			mapBuf = ByteBuffer.allocate(21 * 16 * 4 + 4);
+			mapBuf = ByteBuffer.allocate(28 * 16 * 5 + 4);
 			mapBuf.order(ByteOrder.LITTLE_ENDIAN);
-			mapBuf.putShort(0, (short) 21);
+			mapBuf.putShort(0, (short) 28);
 			mapBuf.putShort(2, (short) 16);
 			break;
 		case 2: // mr
 			pxmTag[3] = 0x30;
-			mapBuf = ByteBuffer.allocate(21 * 16 * 4 + 8);
+			mapBuf = ByteBuffer.allocate(21 * 16 * 5 + 8);
 			mapBuf.order(ByteOrder.LITTLE_ENDIAN);
 			mapBuf.putShort(0, (short) 21);
 			mapBuf.putShort(2, (short) 16);
@@ -1041,7 +1041,7 @@ public class MapInfo implements Changeable {
 		}
 		File pxeFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getFile() + ".pxe"); //$NON-NLS-1$ //$NON-NLS-2$
 		// we can just use our pxaFile field for this, since that's already corrected for CS+
-		//File pxaFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getTileset() + ".pxa"); //$NON-NLS-1$ //$NON-NLS-2$
+		// File pxaFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getTileset() + ".pxa"); //$NON-NLS-1$ //$NON-NLS-2$
 		byte[] pxmTag = { 'P', 'X', 'M', 0x10 };
 		byte[] pxeTag = { 'P', 'X', 'E', 0 };
 		ByteBuffer headerBuf;
