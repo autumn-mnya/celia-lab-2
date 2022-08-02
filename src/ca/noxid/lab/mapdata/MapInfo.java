@@ -226,15 +226,15 @@ public class MapInfo implements Changeable {
 				mapBuf = ByteBuffer.allocate(mapY * mapX);
 				break;
 			case 0x20:
-				mapBuf = ByteBuffer.allocate(mapY * mapX * 4);
+				mapBuf = ByteBuffer.allocate(mapY * mapX * 5);
 				break;
 			case 0x30:
-				mapBuf = ByteBuffer.allocate(mapY * mapX * 4);
+				mapBuf = ByteBuffer.allocate(mapY * mapX * 5);
 				break;
 			case 0x31:
 			case 0x32:
 			case 0x21:
-				mapBuf = ByteBuffer.allocate(mapY * mapX * 4 * 2); // shorts
+				mapBuf = ByteBuffer.allocate(mapY * mapX * 5 * 2); // shorts
 				break;
 			case 0x33:
 				mapBuf = ByteBuffer.allocate(mapY * mapX * 5 * 2); // shorts
@@ -245,7 +245,7 @@ public class MapInfo implements Changeable {
 			mapBuf.order(ByteOrder.LITTLE_ENDIAN);
 			inChan.read(mapBuf);
 			if (pxmVersion >= 0x30) {
-				ByteBuffer lineCount = ByteBuffer.allocate(4);
+				ByteBuffer lineCount = ByteBuffer.allocate(5);
 				lineCount.order(ByteOrder.LITTLE_ENDIAN);
 				inChan.read(lineCount);
 				int nLines = lineCount.getInt(0);
@@ -279,7 +279,7 @@ public class MapInfo implements Changeable {
 				mapBuf = ByteBuffer.allocate(mapY * mapX);
 			} else {
 				pxmVersion = 0x20;
-				mapBuf = ByteBuffer.allocate(mapY * mapX * 4);
+				mapBuf = ByteBuffer.allocate(mapY * mapX * 5);
 			}
 			System.err.println(Messages.getString("MapInfo.0")); //$NON-NLS-1$
 
@@ -304,7 +304,7 @@ public class MapInfo implements Changeable {
 		case 0x20: // KS PXM V1 w/ 4 layers
 		{
 			// needs pxa file
-			for (int layer = 0; layer < 4; layer++) {
+			for (int layer = 0; layer < 5; layer++) {
 				for (int y = 0; y < mapY; y++) {
 					for (int x = 0; x < mapX; x++)
 						map[layer][y][x] = mapBuf.get() & 0xFF;
@@ -314,7 +314,7 @@ public class MapInfo implements Changeable {
 			break;
 		case 0x21: {
 			// needs pxa file
-			for (int layer = 0; layer < 4; layer++) {
+			for (int layer = 0; layer < 5; layer++) {
 				for (int y = 0; y < mapY; y++) {
 					for (int x = 0; x < mapX; x++)
 						map[layer][y][x] = mapBuf.getShort() & 0xFFFF;
@@ -324,7 +324,7 @@ public class MapInfo implements Changeable {
 			break;
 		case 0x30: // MR PXM w/ 4 layers + lines
 			// doesn't need pxa file
-			for (int layer = 0; layer < 4; layer++) {
+			for (int layer = 0; layer < 5; layer++) {
 				for (int y = 0; y < mapY; y++) {
 					for (int x = 0; x < mapX; x++)
 						map[layer][y][x] = mapBuf.get() & 0xFF;
@@ -340,7 +340,7 @@ public class MapInfo implements Changeable {
 		case 0x31:
 		case 0x32:
 			// doesn't need pxa file
-			for (int layer = 0; layer < 4; layer++) {
+			for (int layer = 0; layer < 5; layer++) {
 				for (int y = 0; y < mapY; y++) {
 					for (int x = 0; x < mapX; x++)
 						map[layer][y][x] = mapBuf.getShort() & 0xFFFF;
@@ -1068,11 +1068,11 @@ public class MapInfo implements Changeable {
 				pxmTag[3] = 0x21;
 				headerBuf = ByteBuffer.wrap(pxmTag);
 				pxmChannel.write(headerBuf);
-				mapBuf = ByteBuffer.allocate(mapX * mapY * 4 * 2 + 4);
+				mapBuf = ByteBuffer.allocate(mapX * mapY * 5 * 2 + 4);
 				mapBuf.order(ByteOrder.LITTLE_ENDIAN);
 				mapBuf.putShort((short) mapX);
 				mapBuf.putShort((short) mapY);
-				for (int layer = 0; layer < 4; layer++)
+				for (int layer = 0; layer < 5; layer++)
 					for (int y = 0; y < mapY; y++)
 						for (int x = 0; x < mapX; x++) {
 							mapBuf.putShort((short) getTile(x, y, layer));
