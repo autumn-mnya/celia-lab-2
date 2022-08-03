@@ -123,7 +123,7 @@ public class GameInfo {
 		} else if (base.toString().endsWith(".tbl")){ //$NON-NLS-1$
 			type = MOD_TYPE.MOD_CS_PLUS;
 			dataDir = base.getParentFile();
-            defaultImageExt = ".bmp";
+            defaultImageExt = ".png";
 		} else if (base.toString().endsWith(".bin")) { //$NON-NLS-1$
 			if (base.getName().equals("mrmap.bin")) { //$NON-NLS-1$
 				//moustache
@@ -138,11 +138,11 @@ public class GameInfo {
 		} else if (base.toString().endsWith(".pxm")) { //$NON-NLS-1$
 			type = MOD_TYPE.MOD_CS_PLUS;
 			dataDir = base.getParentFile().getParentFile();
-            defaultImageExt = ".bmp";
+            defaultImageExt = ".png";
 		} else if (base.toString().endsWith(".csmap")) { //$NON-NLS-1$
 			type = MOD_TYPE.MOD_CS;
 			dataDir = base.getParentFile().getParentFile();
-            defaultImageExt = ".bmp";
+            defaultImageExt = ".png";
 		}
 		gameConfig = new BlConfig(dataDir, type);
 		String imageExtension = gameConfig.getImageExtension();

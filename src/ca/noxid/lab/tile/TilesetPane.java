@@ -236,6 +236,7 @@ public class TilesetPane extends JPanel {
 		gBackLight.setColor(bgCol.brighter());
 		Graphics2D gBackDark = (Graphics2D) g2d.create();
 		gBackDark.setColor(bgCol.darker());
+		// How big each transparent square is.
 		int sqSize = 16;
 		int halfSqSize = sqSize / 2;
 		for (int x = 0; x < dispW; x += sqSize) {
