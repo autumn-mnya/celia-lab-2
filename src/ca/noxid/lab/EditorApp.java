@@ -155,6 +155,7 @@ public class EditorApp extends JFrame implements ActionListener {
 	// entities
 	private JList<String> categoryList;
 	private JList<String> subcatList;
+	private String entitySearchQuery = ""; // entity search
 
 	/*
 	 * Getters and setters
@@ -466,6 +467,7 @@ public class EditorApp extends JFrame implements ActionListener {
 		menuBar.add(buildFileMenu());
 		menuBar.add(buildViewMenu());
 		menuBar.add(buildActionMenu());
+		menuBar.add(buildCeliaExtrasMenu());
 		menuBar.add(buildHelpMenu());
 
 		// add the whole menu now
@@ -489,16 +491,21 @@ public class EditorApp extends JFrame implements ActionListener {
 		// mainPanel.setMinimumSize(new Dimension(600, 400));
 		// JPanel opsPanel; -- is class variable
 		// setup the radio group
+
+		// Tile mode
 		JRadioButton radioTile = new JRadioButton(new PerspectiveAction(PERSPECTIVE_TILE));
 		radioTile.setText(Messages.getString("EditorApp.55")); //$NON-NLS-1$
 		radioTile.setSelected(true);
 		radioTile.setOpaque(false);
+		// Entity mode
 		JRadioButton radioEntity = new JRadioButton(new PerspectiveAction(PERSPECTIVE_ENTITY));
 		radioEntity.setText(Messages.getString("EditorApp.56")); //$NON-NLS-1$
 		radioEntity.setOpaque(false);
+		// Script mode
 		JRadioButton radioScript = new JRadioButton(new PerspectiveAction(PERSPECTIVE_TSC));
 		radioScript.setText(Messages.getString("EditorApp.57")); //$NON-NLS-1$
 		radioScript.setOpaque(false);
+		// Mapdata mode
 		JRadioButton radioMapdata = new JRadioButton(new PerspectiveAction(PERSPECTIVE_MAPDATA));
 		radioMapdata.setText(Messages.getString("EditorApp.58")); //$NON-NLS-1$
 		radioMapdata.setOpaque(false);
@@ -1337,6 +1344,27 @@ public class EditorApp extends JFrame implements ActionListener {
 		return ops;
 	}
 
+	// Celia menu
+	private JMenu buildCeliaExtrasMenu() {
+		JMenuItem menuItem;
+		JMenu celia = new JMenu(Messages.getString("EditorApp.Celia.Extra.1")); //$NON-NLS-1$
+
+		// populate
+		menuItem = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = -6358071959738865808L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				airhorn();
+				helpWindow.setVisible(true);
+			}
+		});
+		menuItem.setText(Messages.getString("EditorApp.Celia.Extra.Menu.1")); //$NON-NLS-1$
+		celia.add(menuItem);
+
+		return celia;
+	}
+
 	private JMenu buildHelpMenu() {
 		JMenuItem menuItem;
 		JMenu help = new JMenu(Messages.getString("EditorApp.105")); //$NON-NLS-1$
@@ -1440,7 +1468,7 @@ public class EditorApp extends JFrame implements ActionListener {
 						TabOrganizer currentTab = componentVec.get(selected);
 						EntityPane ep = currentTab.getEntity();
 						Vector<EntityData> eVec = exeData.getEntityList(categoryList.getSelectedValue(),
-								subcatList.getSelectedValue());
+								subcatList.getSelectedValue(), entitySearchQuery);
 						ep.getEntityList().setListData(eVec);
 					} // if there is a selected tab
 				} // if doubleclick
@@ -1478,6 +1506,35 @@ public class EditorApp extends JFrame implements ActionListener {
 		npcTblButton.setText(Messages.getString("EditorApp.114")); //$NON-NLS-1$
 		npcTblButton.setOpaque(false);
 		tempPanel.add(npcTblButton, c);
+
+		// search entity panel
+		c.gridx++;
+		JPanel entitySearchPanel = new JPanel(new BorderLayout(8, 8));
+		entitySearchPanel.setBackground(new Color(0, 0, 0, 0));
+
+		// entity search box
+		JTextField searchField = new JTextField("", 20);
+		entitySearchPanel.add(searchField, BorderLayout.NORTH);
+
+		// entity search button
+		JButton searchButton = new JButton(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				entitySearchQuery = searchField.getText();
+				int selected = EditorApp.this.mapTabs.getSelectedIndex();
+				if (selected != -1) {
+					TabOrganizer currentTab = componentVec.get(selected);
+					EntityPane ep = currentTab.getEntity();
+					Vector<EntityData> eVec = exeData.getEntityList(categoryList.getSelectedValue(),
+							subcatList.getSelectedValue(), entitySearchQuery);
+					ep.getEntityList().setListData(eVec);
+				}
+			}
+		});
+		searchButton.setText("Search entities");
+
+		entitySearchPanel.add(searchButton, BorderLayout.CENTER);
+		tempPanel.add(entitySearchPanel, c);
 
 		// buffer space
 		c.gridx++;
@@ -2653,7 +2710,7 @@ public class EditorApp extends JFrame implements ActionListener {
 	public Vector<EntityData> getEntityList() {
 		String category = categoryList.getSelectedValue();
 		String subcat = subcatList.getSelectedValue();
-		return exeData.getEntityList(category, subcat);
+		return exeData.getEntityList(category, subcat, entitySearchQuery);
 	}
 
 	private Vector<TscPane> getOpenScripts() {
