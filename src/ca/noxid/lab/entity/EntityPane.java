@@ -554,6 +554,13 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 		private FormattedUpdateTextField flagIDInput;
 		private FormattedUpdateTextField eventInput;
 		private FormattedUpdateTextField orderInput;
+		// Custom Values code
+		private FormattedUpdateTextField CustomValue01Input;
+		private FormattedUpdateTextField CustomValue02Input;
+		private FormattedUpdateTextField CustomValue03Input;
+		private FormattedUpdateTextField CustomValue04Input;
+		private FormattedUpdateTextField CustomValue05Input;
+		private FormattedUpdateTextField CustomValue06Input;
 		private JLabel selectCountLabel;
 		private JLabel flagLabel;
 		
@@ -561,6 +568,9 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 		boolean active = false;
 		
 		private final NumberFormat lFormat = 
+				FormattedUpdateTextField.getNumberOnlyFormat(1, 4);
+
+		private final NumberFormat customFormat = 
 				FormattedUpdateTextField.getNumberOnlyFormat(1, 4);
 		
 		
@@ -585,6 +595,18 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 			c.gridy++;
 			this.add(new JLabel(Messages.getString("EntityPane.6")), c); //$NON-NLS-1$
 			c.gridy++;
+			this.add(new JLabel(Messages.getString("EntityPane.Custom.1")), c); //$NON-NLS-1$
+			c.gridy++;
+			this.add(new JLabel(Messages.getString("EntityPane.Custom.2")), c); //$NON-NLS-1$
+			c.gridy++;
+			this.add(new JLabel(Messages.getString("EntityPane.Custom.3")), c); //$NON-NLS-1$
+			c.gridy++;
+			this.add(new JLabel(Messages.getString("EntityPane.Custom.4")), c); //$NON-NLS-1$
+			c.gridy++;
+			this.add(new JLabel(Messages.getString("EntityPane.Custom.5")), c); //$NON-NLS-1$
+			c.gridy++;
+			this.add(new JLabel(Messages.getString("EntityPane.Custom.6")), c); //$NON-NLS-1$
+			c.gridy++;
 			this.add(new JLabel(Messages.getString("EntityPane.7")), c); //$NON-NLS-1$
 			c.gridy = 1;
 			c.gridx = 1;
@@ -603,6 +625,44 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 			orderInput.addActionListener(this);
 			this.add(orderInput, c);
 			c.gridy++;
+			// Custom Value Input(s)
+			CustomValue01Input = new FormattedUpdateTextField(customFormat);
+			CustomValue01Input.setColumns(4);
+			CustomValue01Input.addActionListener(this);
+			this.add(CustomValue01Input, c);
+			c.gridy++;
+
+			CustomValue02Input = new FormattedUpdateTextField(customFormat);
+			CustomValue02Input.setColumns(4);
+			CustomValue02Input.addActionListener(this);
+			this.add(CustomValue02Input, c);
+			c.gridy++;
+
+			CustomValue03Input = new FormattedUpdateTextField(customFormat);
+			CustomValue03Input.setColumns(4);
+			CustomValue03Input.addActionListener(this);
+			this.add(CustomValue03Input, c);
+			c.gridy++;
+
+			CustomValue04Input = new FormattedUpdateTextField(customFormat);
+			CustomValue04Input.setColumns(4);
+			CustomValue04Input.addActionListener(this);
+			this.add(CustomValue04Input, c);
+			c.gridy++;
+
+			CustomValue05Input = new FormattedUpdateTextField(customFormat);
+			CustomValue05Input.setColumns(4);
+			CustomValue05Input.addActionListener(this);
+			this.add(CustomValue05Input, c);
+			c.gridy++;
+
+			CustomValue06Input = new FormattedUpdateTextField(customFormat);
+			CustomValue06Input.setColumns(4);
+			CustomValue06Input.addActionListener(this);
+			this.add(CustomValue06Input, c);
+			c.gridy++;
+
+			// Custom Value input(s) end
 			flagLabel = new JLabel("0000"); //$NON-NLS-1$
 			this.add(flagLabel, c);
 			
@@ -626,6 +686,13 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 				flagIDInput.setEnabled(state);
 				eventInput.setEnabled(state);
 				orderInput.setEnabled(state);
+				// Custom Values code
+				CustomValue01Input.setEnabled(state);
+				CustomValue02Input.setEnabled(state);
+				CustomValue03Input.setEnabled(state);
+				CustomValue04Input.setEnabled(state);
+				CustomValue05Input.setEnabled(state);
+				CustomValue06Input.setEnabled(state);
 				for (JCheckBox c : flagArray) {
 					c.setEnabled(state);
 				}
@@ -644,6 +711,13 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 				flagIDInput.setText(String.valueOf(p.getFlagID()));
 				eventInput.setText(String.valueOf(p.getEvent()));
 				orderInput.setText(String.valueOf(p.getOrder()));
+				// Custom Values code
+				CustomValue01Input.setText(String.valueOf(p.getCustomValue01()));
+				CustomValue02Input.setText(String.valueOf(p.getCustomValue02()));
+				CustomValue03Input.setText(String.valueOf(p.getCustomValue03()));
+				CustomValue04Input.setText(String.valueOf(p.getCustomValue04()));
+				CustomValue05Input.setText(String.valueOf(p.getCustomValue05()));
+				CustomValue06Input.setText(String.valueOf(p.getCustomValue06()));
 				int flags = p.getFlags();
 				flagLabel.setText(String.format("0x%04X", flags)); //$NON-NLS-1$
 				int bit = 1;
@@ -662,6 +736,13 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 				orderInput.setEnabled(false);
 				String flagID = null;
 				String event = null;
+				// Custom Values code
+				String CustomValue01text = null;
+				String CustomValue02text = null;
+				String CustomValue03text = null;
+				String CustomValue04text = null;
+				String CustomValue05text = null;
+				String CustomValue06text = null;
 				int[] flagsArray = new int[flagArray.length];
 				for (PxeEntry p : entityList) {
 					if (flagID == null) {
@@ -694,6 +775,13 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 						flagArray[i].setSelected(true);
 						flagArray[i].setText(EntityData.flagNames[i] + "*" + flagsArray[i]); //$NON-NLS-1$
 					}
+				// Custom Values code
+				CustomValue01Input.setText(CustomValue01text);
+				CustomValue02Input.setText(CustomValue02text);
+				CustomValue03Input.setText(CustomValue03text);
+				CustomValue04Input.setText(CustomValue04text);
+				CustomValue05Input.setText(CustomValue05text);
+				CustomValue06Input.setText(CustomValue06text);
 				}
 			} //if size  > 1
 		}//listChanged();
@@ -730,6 +818,67 @@ public class EntityPane extends MapPane implements ListSelectionListener, Clipbo
 						orderInput.setText("0");
 					}
 					entityList.iterator().next().setOrder(order);
+				// Custom Values code
+				} else if (src == CustomValue01Input) {
+					int customvalue1 = 0;
+					try {
+						customvalue1 = Integer.parseInt(CustomValue01Input.getText());
+					} catch (NumberFormatException err) {
+						CustomValue01Input.setText("0");
+					}
+					for (PxeEntry e : entityList) {
+						e.setCustomValue01(customvalue1);
+					}
+				} else if (src == CustomValue02Input) {
+					int customvalue2 = 0;
+					try {
+						customvalue2 = Integer.parseInt(CustomValue02Input.getText());
+					} catch (NumberFormatException err) {
+						CustomValue02Input.setText("0");
+					}
+					for (PxeEntry e : entityList) {
+						e.setCustomValue02(customvalue2);
+					}
+				} else if (src == CustomValue03Input) {
+					int customvalue3 = 0;
+					try {
+						customvalue3 = Integer.parseInt(CustomValue03Input.getText());
+					} catch (NumberFormatException err) {
+						CustomValue03Input.setText("0");
+					}
+					for (PxeEntry e : entityList) {
+						e.setCustomValue03(customvalue3);
+					}
+				} else if (src == CustomValue04Input) {
+					int customvalue4 = 0;
+					try {
+						customvalue4 = Integer.parseInt(CustomValue04Input.getText());
+					} catch (NumberFormatException err) {
+						CustomValue04Input.setText("0");
+					}
+					for (PxeEntry e : entityList) {
+						e.setCustomValue04(customvalue4);
+					}
+				} else if (src == CustomValue05Input) {
+					int customvalue5 = 0;
+					try {
+						customvalue5 = Integer.parseInt(CustomValue05Input.getText());
+					} catch (NumberFormatException err) {
+						CustomValue05Input.setText("0");
+					}
+					for (PxeEntry e : entityList) {
+						e.setCustomValue05(customvalue5);
+					}
+				} else if (src == CustomValue06Input) {
+					int customvalue6 = 0;
+					try {
+						customvalue6 = Integer.parseInt(CustomValue06Input.getText());
+					} catch (NumberFormatException err) {
+						CustomValue06Input.setText("0");
+					}
+					for (PxeEntry e : entityList) {
+						e.setCustomValue06(customvalue6);
+					}
 				} else {
 					//check flags
 					for (int i = 0; i < flagArray.length; i++) {

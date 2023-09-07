@@ -428,8 +428,9 @@ public class MapInfo implements Changeable {
 		chan.write(mapBuf);
 		out.close();
 	}
-
+	
 	// load pxe file
+	// load cpxe file as well
 	private void getEntities(Mapdata d, File directory) {
 
 		pxeList = new LinkedList<>();
@@ -438,6 +439,19 @@ public class MapInfo implements Changeable {
 			currentFile = ResourceManager.checkBase(currentFile);
 			FileInputStream inStream = new FileInputStream(currentFile);
 			FileChannel inChan = inStream.getChannel();
+
+			// Custom Values
+			File customcurrentFile = new File(directory + "/Stage/" + d.getFile() + ".cpxe");
+			customcurrentFile = ResourceManager.checkBase(customcurrentFile);
+			FileInputStream custominStream = null;
+			FileChannel customInChan = null;
+
+			if (customcurrentFile.exists())
+			{
+				custominStream = new FileInputStream(customcurrentFile);
+				customInChan = custominStream.getChannel();
+			}
+
 			ByteBuffer hBuf = ByteBuffer.allocate(6);
 			hBuf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -445,45 +459,63 @@ public class MapInfo implements Changeable {
 			hBuf.flip();
 			int nEnt;
 			ByteBuffer eBuf;
-			switch (hBuf.get(3)) {
-			case 0: // original pxe
-				nEnt = hBuf.getShort(4);
-				eBuf = ByteBuffer.allocate(nEnt * 12 + 2);
-				eBuf.order(ByteOrder.LITTLE_ENDIAN);
-				inChan.read(eBuf);
-				eBuf.flip();
-				eBuf.getShort(); // discard this value
-				for (int i = 0; i < nEnt; i++) {
-					int pxeX = eBuf.getShort();
-					int pxeY = eBuf.getShort();
-					int pxeFlagID = eBuf.getShort();
-					int pxeEvent = eBuf.getShort();
-					int pxeType = eBuf.getShort();
-					int pxeFlags = eBuf.getShort() & 0xFFFF;
-					PxeEntry p = new PxeEntry(pxeX, pxeY, pxeFlagID, pxeEvent, pxeType, pxeFlags, 1);
-					p.filePos = i;
-					pxeList.add(p);
-				}
-				break;
-			case 0x10: // kss pxe
-				nEnt = hBuf.getShort(4);
-				eBuf = ByteBuffer.allocate(nEnt * 13);
-				eBuf.order(ByteOrder.LITTLE_ENDIAN);
-				inChan.read(eBuf);
-				eBuf.flip();
-				for (int i = 0; i < nEnt; i++) {
-					int pxeX = eBuf.getShort();
-					int pxeY = eBuf.getShort();
-					int pxeFlagID = eBuf.getShort();
-					int pxeEvent = eBuf.getShort();
-					int pxeType = eBuf.getShort();
-					int pxeFlags = eBuf.getShort();
-					byte pxeLayer = eBuf.get();
-					PxeEntry p = new PxeEntry(pxeX, pxeY, pxeFlagID, pxeEvent, pxeType, pxeFlags, pxeLayer);
-					p.filePos = i;
-					pxeList.add(p);
-				}
-				break;
+
+			// pxe type
+			byte pxeFileType = hBuf.get(3);
+
+			nEnt = hBuf.getShort(4); //get how many entities
+			int entitySize = (pxeFileType == 0x00) ? nEnt * 12 + 2 : nEnt * 13; //determine the total size we need
+			eBuf = ByteBuffer.allocate(entitySize); //allocate that many bytes
+			eBuf.order(ByteOrder.LITTLE_ENDIAN);
+			inChan.read(eBuf); //read the entire file into the buffer
+			eBuf.flip();
+
+			// nEnt * (4 * AmountOfCustomEntries + 4)
+			ByteBuffer myBuf = ByteBuffer.allocate(nEnt * (4 * 6) + 4);
+
+			// Load Custom File into memory
+			if (customInChan != null)
+			{
+				myBuf.order(ByteOrder.LITTLE_ENDIAN);
+				customInChan.read(myBuf);
+				myBuf.flip();
+				myBuf.getInt();
+			}
+
+			// Load autumn custom pxe
+			switch (pxeFileType)
+			{
+				case 0:
+					eBuf.getShort();
+					for (int i = 0; i < nEnt; i++) {
+						int pxeX = eBuf.getShort();
+						int pxeY = eBuf.getShort();
+						int pxeFlagID = eBuf.getShort();
+						int pxeEvent = eBuf.getShort();
+						int pxeType = eBuf.getShort();
+						int pxeFlags = eBuf.getShort() & 0xFFFF;
+						// Custom values ..
+						int cpxeValue1 = 0;
+						int cpxeValue2 = 0;
+						int cpxeValue3 = 0;
+						int cpxeValue4 = 0;
+						int cpxeValue5 = 0;
+						int cpxeValue6 = 0;
+						if (customInChan != null)
+						{
+							cpxeValue1 = myBuf.getInt();
+							cpxeValue2 = myBuf.getInt();
+							cpxeValue3 = myBuf.getInt();
+							cpxeValue4 = myBuf.getInt();
+							cpxeValue5 = myBuf.getInt();
+							cpxeValue6 = myBuf.getInt();
+						}
+						PxeEntry p = new PxeEntry(pxeX, pxeY, pxeFlagID, pxeEvent, pxeType, pxeFlags, 1, cpxeValue1, cpxeValue2, cpxeValue3, cpxeValue4, cpxeValue5, cpxeValue6); // (broken for obvious reasons atm)
+						p.filePos = i;
+						pxeList.add(p);
+					}
+					break;
+
 			default:
 				System.err.println(Messages.getString("MapInfo.15")); //$NON-NLS-1$
 				inChan.close();
@@ -543,6 +575,74 @@ public class MapInfo implements Changeable {
 			return entityType;
 		}
 
+		// Custom Values code
+
+		private int CustomValue01;
+
+		public int getCustomValue01() {
+			return CustomValue01;
+		}
+
+		public void setCustomValue01(int num) {
+			CustomValue01 = num;
+			markChanged();
+		}
+
+		private int CustomValue02;
+
+		public int getCustomValue02() {
+			return CustomValue02;
+		}
+
+		public void setCustomValue02(int num) {
+			CustomValue02 = num;
+			markChanged();
+		}
+
+		private int CustomValue03;
+
+		public int getCustomValue03() {
+			return CustomValue03;
+		}
+
+		public void setCustomValue03(int num) {
+			CustomValue03 = num;
+			markChanged();
+		}
+
+		private int CustomValue04;
+
+		public int getCustomValue04() {
+			return CustomValue04;
+		}
+
+		public void setCustomValue04(int num) {
+			CustomValue04 = num;
+			markChanged();
+		}
+
+		private int CustomValue05;
+
+		public int getCustomValue05() {
+			return CustomValue05;
+		}
+
+		public void setCustomValue05(int num) {
+			CustomValue05 = num;
+			markChanged();
+		}
+
+		private int CustomValue06;
+
+		public int getCustomValue06() {
+			return CustomValue06;
+		}
+
+		public void setCustomValue06(int num) {
+			CustomValue06 = num;
+			markChanged();
+		}
+
 		// set method below
 		private short flags;
 
@@ -580,7 +680,8 @@ public class MapInfo implements Changeable {
 			return inf;
 		}
 
-		PxeEntry(int pxeX, int pxeY, int pxeFlagID, int pxeEvent, int pxeType, int pxeFlags, int pxeLayer) {
+		// Custom Values code added to this function
+		PxeEntry(int pxeX, int pxeY, int pxeFlagID, int pxeEvent, int pxeType, int pxeFlags, int pxeLayer, int pxeCustomValue01, int pxeCustomValue02, int pxeCustomValue03, int pxeCustomValue04, int pxeCustomValue05, int pxeCustomValue06 ) {
 			xTile = (short) pxeX;
 			yTile = (short) pxeY;
 			flagID = (short) pxeFlagID;
@@ -588,6 +689,13 @@ public class MapInfo implements Changeable {
 			entityType = (short) pxeType;
 			flags = (short) pxeFlags;
 			layer = (byte) pxeLayer;
+			// Custom Value(s) (???)
+			CustomValue01 = (short) pxeCustomValue01;
+			CustomValue02 = (short) pxeCustomValue02;
+			CustomValue03 = (short) pxeCustomValue03;
+			CustomValue04 = (short) pxeCustomValue04;
+			CustomValue05 = (short) pxeCustomValue05;
+			CustomValue06 = (short) pxeCustomValue06;
 			filePos = -1;
 
 			inf = exeData.getEntityInfo(entityType);
@@ -599,7 +707,7 @@ public class MapInfo implements Changeable {
 
 		public PxeEntry clone() {
 			return new PxeEntry(this.xTile, this.yTile, this.flagID, this.eventNum, this.entityType, this.flags,
-					this.layer);
+					this.layer, this.CustomValue01, this.CustomValue02, this.CustomValue03, this.CustomValue04, this.CustomValue05, this.CustomValue06);
 		}
 
 		public void draw(Graphics2D g2d, int flags) {
@@ -702,6 +810,21 @@ public class MapInfo implements Changeable {
 			retVal.putShort(flags);
 			// if (EditorApp.EDITOR_MODE >= 1)
 			// retVal.put(layer);
+			retVal.flip();
+			return retVal;
+		}
+
+		// Saving Autumn custom pxe (cpxe)
+		public ByteBuffer toCustomBuf() {
+			int size = 4 * 6; // 4 * AmountOfEntries
+			ByteBuffer retVal = ByteBuffer.allocate(size);
+			retVal.order(ByteOrder.LITTLE_ENDIAN);
+			retVal.putInt(CustomValue01);
+			retVal.putInt(CustomValue02);
+			retVal.putInt(CustomValue03);
+			retVal.putInt(CustomValue04);
+			retVal.putInt(CustomValue05);
+			retVal.putInt(CustomValue06);
 			retVal.flip();
 			return retVal;
 		}
@@ -1040,10 +1163,13 @@ public class MapInfo implements Changeable {
 			pxmFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getFile() + ".pxm"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		File pxeFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getFile() + ".pxe"); //$NON-NLS-1$ //$NON-NLS-2$
+		// Custom Values file
+		File cpxeFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getFile() + ".cpxe"); //$NON-NLS-1$ //$NON-NLS-2$
 		// we can just use our pxaFile field for this, since that's already corrected for CS+
 		// File pxaFile = new File(exeData.getDataDirectory() + "/Stage/" + d.getTileset() + ".pxa"); //$NON-NLS-1$ //$NON-NLS-2$
 		byte[] pxmTag = { 'P', 'X', 'M', 0x10 };
 		byte[] pxeTag = { 'P', 'X', 'E', 0 };
+		byte[] cpxeTag = { 'C', 'L', 'A', 0 };
 		ByteBuffer headerBuf;
 		ByteBuffer mapBuf;
 
@@ -1178,6 +1304,24 @@ public class MapInfo implements Changeable {
 			out.close();
 		} catch (IOException e) {
 			StrTools.msgBox("Error saving .pxe file. (check read-only?)");
+			e.printStackTrace();
+		}
+
+		try {
+			// Save Autumn Custom PXE (.cpxe)
+			FileOutputStream out = new FileOutputStream(cpxeFile);
+			FileChannel pxeChannel = out.getChannel();
+			headerBuf = ByteBuffer.wrap(cpxeTag); // Header
+			pxeChannel.write(headerBuf);
+
+			for (PxeEntry nextEntry : pxeList) {
+				pxeChannel.write(nextEntry.toCustomBuf());
+			}
+			pxeChannel.close();
+			out.close();
+			
+		} catch (IOException e) {
+			StrTools.msgBox("Error saving .cpxe file. (check read-only?)");
 			e.printStackTrace();
 		}
 
@@ -1478,7 +1622,7 @@ public class MapInfo implements Changeable {
 	 * @return the new entity created
 	 */
 	public PxeEntry addEntity(int x, int y, int id) {
-		PxeEntry ent = new PxeEntry(x, y, 0, 0, id, 0, 0);
+		PxeEntry ent = new PxeEntry(x, y, 0, 0, id, 0, 0, 0, 0, 0, 0, 0, 0);
 		return addEntity(ent);
 	}
 
