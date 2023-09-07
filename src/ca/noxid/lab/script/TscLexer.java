@@ -198,7 +198,7 @@ public class TscLexer {
 				boolean setOver = false;
 				while (true) {
 					if (isFace) {
-						if ((charCount > 27) && (!overLimit)) {
+						if ((charCount > 34) && (!overLimit)) {
 							setOver = true;
 							break;
 						}
