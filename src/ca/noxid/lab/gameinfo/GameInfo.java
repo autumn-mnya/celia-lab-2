@@ -1202,9 +1202,10 @@ public class GameInfo {
 		return nd;
 	}
 	
+	// Copy Map Files should include the custom values and other new formats
 	private void copyMapFiles(Mapdata src, Mapdata dest) {
 		//pxm, pxe, tsc
-		String[] extArray = {".pxm", ".pxe", ".tsc"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String[] extArray = {".pxm", ".pxe", ".cpxe", ".tsc"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		File srcf, destf;
 		
 		try {

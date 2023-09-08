@@ -1,0 +1,8 @@
+Transport scripts to map 3 003 Cavern
+	 004.tsc event #100 TRA to coords (48,6) running event 90
+Transport scripts to map 4 004 Cavern
+	 003.tsc event #101 TRA to coords (2,11) running event 92
+Transport scripts to map 5 005 Outskirts
+	 006.tsc event #100 TRA to coords (83,20) running event 90
+Transport scripts to map 6 006 Kannomoe Town
+	 005.tsc event #101 TRA to coords (2,27) running event 92

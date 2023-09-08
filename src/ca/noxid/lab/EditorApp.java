@@ -79,6 +79,7 @@ public class EditorApp extends JFrame implements ActionListener {
 	public static final String PERSPECTIVE_ENTITY = "Entity"; //$NON-NLS-1$
 	public static final String PERSPECTIVE_TSC = "Script"; //$NON-NLS-1$
 	public static final String PERSPECTIVE_MAPDATA = "Mapdata"; //$NON-NLS-1$
+	public static final String PERSPECTIVE_STYLEGROUNDS = "Stylegrounds"; //$NON-NLS-1$
 	private static final int NUM_DRAWMODE = 5;
 
 	// globally accessible components
@@ -509,11 +510,17 @@ public class EditorApp extends JFrame implements ActionListener {
 		JRadioButton radioMapdata = new JRadioButton(new PerspectiveAction(PERSPECTIVE_MAPDATA));
 		radioMapdata.setText(Messages.getString("EditorApp.58")); //$NON-NLS-1$
 		radioMapdata.setOpaque(false);
+		// CELIA: Stylegrounds mode
+		JRadioButton radioStylegrounds = new JRadioButton(new PerspectiveAction(PERSPECTIVE_STYLEGROUNDS));
+		radioStylegrounds.setText(Messages.getString("EditorApp.Celia.Stylegrounds.1")); //$NON-NLS-1$
+		radioStylegrounds.setOpaque(false);
 		ButtonGroup group = new ButtonGroup();
+		// Radio Buttons
 		group.add(radioTile);
 		group.add(radioEntity);
 		group.add(radioScript);
 		group.add(radioMapdata);
+		group.add(radioStylegrounds);
 		JPanel opsRadio = new JPanel();
 		opsRadio.setLayout(new GridBagLayout());
 		opsRadio.setBackground(Color.decode("0x83A767")); //$NON-NLS-1$
@@ -527,6 +534,8 @@ public class EditorApp extends JFrame implements ActionListener {
 		opsRadio.add(radioScript, c);
 		c.gridy++;
 		opsRadio.add(radioMapdata, c);
+		c.gridy++;
+		opsRadio.add(radioStylegrounds, c);
 		// constraints
 		c.gridx = 0;
 		c.gridy = 0;
@@ -1301,7 +1310,6 @@ public class EditorApp extends JFrame implements ActionListener {
 		ops.add(menuItem);
 
 		// Spritesheet Organizer
-		/*
 		menuItem = new JMenuItem(new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1312,7 +1320,6 @@ public class EditorApp extends JFrame implements ActionListener {
 		});
 		menuItem.setText("toggle sprite thing");
 		ops.add(menuItem);
-		*/
 
 		menuItem = new JMenuItem(new AbstractAction() {
 			@Override
@@ -1411,6 +1418,11 @@ public class EditorApp extends JFrame implements ActionListener {
 		opsPanel.add(buildScriptOps(), PERSPECTIVE_TSC);
 
 		opsPanel.add(buildMapdataOps(), PERSPECTIVE_MAPDATA);
+
+		// Celia
+
+		// Stylegrounds
+		opsPanel.add(buildStylegroundsOps(), PERSPECTIVE_STYLEGROUNDS);
 
 		return opsPanel;
 	}
@@ -1646,6 +1658,36 @@ public class EditorApp extends JFrame implements ActionListener {
 
 	// Set up the "Mapdata" panel
 	private JPanel buildMapdataOps() {
+		// local vars for setting up ops panel
+		JPanel tempPanel;
+		JLabel kittyLabel;
+		java.net.URL kittenURL;
+		ImageIcon catImg;
+		GridBagConstraints c = new GridBagConstraints();
+		// ButtonGroup group;
+		tempPanel = new BgPanel(new GridBagLayout(), iMan.getImg(ResourceManager.rsrcBackdrop)); // $NON-NLS-1$
+		// ActionListener oListen = new TileOpsListener();
+		c.anchor = GridBagConstraints.LINE_START;
+		if (blazed) {
+			kittenURL = EditorApp.class.getResource("rsrc/weed_MapdataCat.gif"); //$NON-NLS-1$
+		} else {
+			kittenURL = EditorApp.class.getResource("rsrc/MapdataCat.gif"); //$NON-NLS-1$
+		}
+		catImg = new ImageIcon(kittenURL, "pic"); //$NON-NLS-1$
+		kittyLabel = new JLabel(catImg);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridheight = GridBagConstraints.REMAINDER;
+		c.weightx = 0;
+		tempPanel.add(kittyLabel, c);
+
+		return tempPanel;
+	}
+
+	// Celia panels
+
+	// Set up the "Stylegrounds" panel
+	private JPanel buildStylegroundsOps() {
 		// local vars for setting up ops panel
 		JPanel tempPanel;
 		JLabel kittyLabel;
@@ -2492,6 +2534,30 @@ public class EditorApp extends JFrame implements ActionListener {
 			mapTabs.repaint();
 			break;
 		}
+		// Celia
+		// Stylegrounds case
+		case PERSPECTIVE_STYLEGROUNDS: {
+			tilesetWindow.setVisible(false);
+			entityWindow.setVisible(false);
+			CardLayout layout = (CardLayout) opsPanel.getLayout();
+			layout.show(opsPanel, PERSPECTIVE_STYLEGROUNDS);
+			// update the tabs
+			for (int i = 0; i < mapTabs.getComponentCount(); i++) {
+				// for each tab
+				/*
+				JPanel currentPanel = (JPanel)mapTabs.getComponent(i);
+				layout = (CardLayout)currentPanel.getLayout();
+				layout.show(currentPanel, PERSPECTIVE_MAPDATA);
+				*/
+				// JPanel currentPanel = (JPanel)mapTabs.getComponent(i);
+				TabOrganizer inf = componentVec.get(i);
+				// currentPanel.removeAll();
+				mapTabs.setComponentAt(i, buildTabContents(inf));
+				// currentPanel.revalidate();
+			}
+			mapTabs.repaint();
+			break;
+		}
 		}
 	}
 
@@ -2647,6 +2713,8 @@ public class EditorApp extends JFrame implements ActionListener {
 			return inf.tscBuilder;
 		case PERSPECTIVE_MAPDATA:
 			return inf.mapdata;
+		case PERSPECTIVE_STYLEGROUNDS:
+			return inf.tscBuilder;
 		default:
 			// bad action
 			return new JLabel(Messages.getString("EditorApp.161")); //$NON-NLS-1$
